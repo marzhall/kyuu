@@ -28,7 +28,9 @@ type server struct {
 
 var logrequests styx.HandlerFunc = func(s *styx.Session) {
 	for s.Next() {
-		log.Printf("%q %T %s", s.User, s.Request(), s.Request().Path())
+		if *verbose {
+			log.Printf("%q %T %s", s.User, s.Request(), s.Request().Path())
+		}
 	}
 }
 
@@ -110,7 +112,6 @@ func (srv *server) Serve9P(s *styx.Session) {
 			case map[string]interface{}, []interface{}:
 				t.Ropen(mkdir(v), nil)
 			default:
-				os.Stderr.WriteString("opening")
 				t.Ropen(&fakefile{v: file}, nil)
 			}
 		case styx.Tutimes:
