@@ -18,19 +18,21 @@ type messageOrEOF struct {
 }
 
 type fakefile struct {
-	v      interface{}
-	offset int64
-	set    func(s string)
+	v       interface{}
+	offset  int64
+	sendEof bool
+	set     func(s string)
 }
 
 func (f *fakefile) ReadAt(p []byte, off int64) (int, error) {
+	if f.sendEof {
+		return 0, nil
+	}
+
 	select {
 	case temp := <-internal_queue:
-		if temp.isEof {
-			return 0, nil
-		}
-
 		n := copy(p, temp.m)
+		f.sendEof = true
 		return n, nil
 	default:
 		return 0, nil
@@ -41,7 +43,6 @@ func (f *fakefile) Write(p []byte) (int, error) {
 	tmp := make([]byte, len(p))
 	copy(tmp, p)
 	internal_queue <- messageOrEOF{m: tmp, isEof: false}
-	internal_queue <- messageOrEOF{m: tmp, isEof: true}
 
 	return len(p), nil
 }
