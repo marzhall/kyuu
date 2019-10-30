@@ -10,11 +10,6 @@ and reads from the file produce a message.
 The queue can be mounted, read from, and written to simulatenously on
 multiple places on the filesystem and from multiple machines.
 
-## Dependency
-
-The styx 9p server for go library:
-    https://godoc.org/aqwari.net/net/styx
-
 # Usage
 
         $: kyuu queue &
@@ -27,6 +22,11 @@ The styx 9p server for go library:
            msg1
         $: cat test/myqueue
            msg2
+
+## Dependency
+
+The styx 9p server for go library:
+    https://godoc.org/aqwari.net/net/styx
 
 ## Optional Dependency
 
