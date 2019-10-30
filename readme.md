@@ -12,7 +12,7 @@ multiple places on the filesystem and from multiple machines.
 
 # Usage
 
-        $: kyuu queue &
+        $: kyuu myqueue &
         $: 9pfuse 127.0.0.1:5640 test
 
         $: echo msg1 > test/myqueue
