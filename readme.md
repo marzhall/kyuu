@@ -1,19 +1,39 @@
-9p server that queues messages on write to the file and prints messages on read from the file
+# Kyuu
 
-Usage:
+## 9 queue
 
-    # Using the linux kernel 9p driver
-    ./kyuu myqueue &
-    sudo mount -t 9p -o tcp,trans=tcp,port=5640 127.0.0.1 test
-    echo foo > test/myqueue
-    cat test/myqueue
-    # responds: "foo"
-    # When stopping:
-    umount test
+Kyuu is a message queue that exposes itself for mount onto a filesystem.
 
-    # Using 9pfuse from the Plan 9 in Userspace toolset:
-    sh start.sh
-    echo foo > test/myqueue
-    cat test/myqueue
-    # responds: "foo"
-    fusermount -u test
+Once mounted as a file, writes to the queue file place a message on it,
+and reads from the file produce a message.
+
+The queue can be mounted, read from, and written to simulatenously on
+multiple places on the filesystem and from multiple machines.
+
+## Dependency
+
+The styx 9p server for go library:
+    https://godoc.org/aqwari.net/net/styx
+
+
+## Optional Dependency
+
+For easier mounting, the 9pfuse package from plan9port is very helpful:
+    https://9fans.github.io/plan9port/
+
+There is a 9p driver in the linux kernel that will allow the mounting
+and use of kyuu, but it requires root and is a pain in the butt.
+
+# Usage
+
+        $: kyuu queue &
+        $: 9pfuse 127.0.0.1:5640 test
+
+        $: echo msg1 > test/myqueue
+        $: echo msg2 > test/myqueue
+
+        $: cat test/myqueue
+           msg1
+        $: cat test/myqueue
+           msg2
+
