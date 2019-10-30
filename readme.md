@@ -15,15 +15,6 @@ multiple places on the filesystem and from multiple machines.
 The styx 9p server for go library:
     https://godoc.org/aqwari.net/net/styx
 
-
-## Optional Dependency
-
-For easier mounting, the 9pfuse package from plan9port is very helpful:
-    https://9fans.github.io/plan9port/
-
-There is a 9p driver in the linux kernel that will allow the mounting
-and use of kyuu, but it requires root and is a pain in the butt.
-
 # Usage
 
         $: kyuu queue &
@@ -37,3 +28,15 @@ and use of kyuu, but it requires root and is a pain in the butt.
         $: cat test/myqueue
            msg2
 
+## Optional Dependency
+
+For easier mounting, the 9pfuse package from plan9port is very helpful:
+    https://9fans.github.io/plan9port/
+
+There is a 9p driver in the linux kernel that will allow the mounting
+and use of kyuu without building 9pfuse, but it requires root and is
+a pain in the butt.
+
+The linux 9 driver would be:
+
+    sudo mount -t 9p -o tcp,trans=tcp,port=5640 127.0.0.1 test
