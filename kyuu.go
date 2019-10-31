@@ -103,7 +103,7 @@ func (srv *server) Serve9P(s *styx.Session) {
 			t.Rerror("no such file or directory")
 			continue
 		}
-		fi := &stat{name: path.Base(t.Path()), file: &fakefile{v: file}}
+		fi := &stat{name: path.Base(t.Path()), file: &fakefile{v: file, name: t.Path()}}
 		switch t := t.(type) {
 		case styx.Twalk:
 			t.Rwalk(fi, nil)
@@ -112,7 +112,10 @@ func (srv *server) Serve9P(s *styx.Session) {
 			case map[string]interface{}, []interface{}:
 				t.Ropen(mkdir(v), nil)
 			default:
-				t.Ropen(&fakefile{v: file}, nil)
+				if _, ok := internal_queues[t.Path()]; !ok {
+					internal_queues[t.Path()] = make(chan messageOrEOF, 2000)
+				}
+				t.Ropen(&fakefile{v: file, name: t.Path()}, nil)
 			}
 		case styx.Tutimes:
 			t.Rutimes(nil)
@@ -131,26 +134,11 @@ func (srv *server) Serve9P(s *styx.Session) {
 					t.Rcreate(mkdir(dir), nil)
 				} else {
 					v[t.Name] = new(bytes.Buffer)
+					internal_queues[t.Path()] = make(chan messageOrEOF, 2000)
 					t.Rcreate(&fakefile{
-						v:   v[t.Name],
-						set: func(s string) { v[t.Name] = s },
-					}, nil)
-				}
-			case []interface{}:
-				i, err := strconv.Atoi(t.Name)
-				if err != nil {
-					t.Rerror("member of an array must be a number: %s", err)
-					break
-				}
-				if t.Mode.IsDir() {
-					dir := make(map[string]interface{})
-					v[i] = dir
-					t.Rcreate(mkdir(dir), nil)
-				} else {
-					v[i] = new(bytes.Buffer)
-					t.Rcreate(&fakefile{
-						v:   v[i],
-						set: func(s string) { v[i] = s },
+						v:    v[t.Name],
+						name: t.Path(),
+						set:  func(s string) { v[t.Name] = s },
 					}, nil)
 				}
 			default:

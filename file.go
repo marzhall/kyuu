@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-var internal_queue = make(chan messageOrEOF, 2000)
+var internal_queues = make(map[string]chan messageOrEOF)
 
 // Turn Go types into files
 
@@ -21,6 +21,7 @@ type fakefile struct {
 	v       interface{}
 	offset  int64
 	sendEof bool
+	name    string
 	set     func(s string)
 }
 
@@ -30,7 +31,7 @@ func (f *fakefile) ReadAt(p []byte, off int64) (int, error) {
 	}
 
 	select {
-	case temp := <-internal_queue:
+	case temp := <-internal_queues[f.name]:
 		n := copy(p, temp.m)
 		f.sendEof = true
 		return n, nil
@@ -42,23 +43,12 @@ func (f *fakefile) ReadAt(p []byte, off int64) (int, error) {
 func (f *fakefile) Write(p []byte) (int, error) {
 	tmp := make([]byte, len(p))
 	copy(tmp, p)
-	internal_queue <- messageOrEOF{m: tmp, isEof: false}
+	internal_queues[f.name] <- messageOrEOF{m: tmp, isEof: false}
 
 	return len(p), nil
 }
 
 func (f *fakefile) WriteAt(p []byte, off int64) (int, error) {
-	/*buf, ok := f.v.(*bytes.Buffer)
-	if !ok {
-		return 0, errors.New("not supported")
-	}
-	if off != f.offset {
-		return 0, errors.New("no seeking")
-	}
-	n, err := buf.Write(p)
-	f.offset += int64(n)
-	return n, err
-	*/
 	return f.Write(p)
 }
 
