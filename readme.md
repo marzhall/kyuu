@@ -16,8 +16,9 @@ multiple places on the filesystem and from multiple machines.
 
 # Usage
 
-Starting a queue daemon, writing to a queue, then popping messages from
-the queue by `cat`ting the file:
+This is an example of starting a queue daemon, mounting it to the folder
+"test," writing to a queue named "queue", then popping messages from
+the queue using `cat`:
 
         $: kyuu myqueue &
         $: 9pfuse 127.0.0.1:5640 test
