@@ -36,8 +36,10 @@ just touching a new file in the kyuu folder:
 
         $: touch test/newqueue
         $: ls test
-           myqueue
-           newqueue
+           myqueue new_queue
+        $: echo msg1 > test/new_queue
+        $: cat test/newqueue
+           msg1
 
 
 ## Dependency
