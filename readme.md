@@ -1,16 +1,23 @@
 # Kyuu
 
-## 9 queue
+## 9p-based virtual file queue
 
-Kyuu is a message queue that exposes itself for mount onto a filesystem.
+Kyuu creates message queues that expose themselves as files.
 
-Once mounted as a file, writes to the queue file place a message on it,
-and reads from the file produce a message.
+Writes to a queue file place a message on it, and reads from
+the file return a message.
 
 The queue can be mounted, read from, and written to simulatenously on
 multiple places on the filesystem and from multiple machines.
 
+The queue server exposes itself to the network for mounting by either
+the built-in linux 9p driver, or, more easily, the 9pfuse FUSE filesystem
+driver.
+
 # Usage
+
+Starting a queue daemon, writing to a queue, then popping messages from
+the queue by catting the file:
 
         $: kyuu myqueue &
         $: 9pfuse 127.0.0.1:5640 test
@@ -22,6 +29,15 @@ multiple places on the filesystem and from multiple machines.
            msg1
         $: cat test/myqueue
            msg2
+
+Creating a new queue, after having mounted the filesystem, is done by
+just touching a new file in the kyuu folder:
+
+        $: touch test/newqueue
+        $: ls test
+           myqueue
+           newqueue
+
 
 ## Dependency
 
