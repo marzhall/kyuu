@@ -7,12 +7,12 @@ Kyuu creates message queues that expose themselves as files.
 Writes to a queue file place a message on it, and reads from
 the file return a message.
 
+The queue server exposes itself to the network at an IP address
+and port, and can be mounted by the built-in linux 9p driver, or,
+more easily, the 9pfuse FUSE filesystem driver.
+
 The queue can be mounted, read from, and written to simulatenously on
 multiple places on the filesystem and from multiple machines.
-
-The queue server exposes itself to the network for mounting by either
-the built-in linux 9p driver, or, more easily, the 9pfuse FUSE filesystem
-driver.
 
 # Usage
 
