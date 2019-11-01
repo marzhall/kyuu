@@ -17,9 +17,10 @@ import (
 )
 
 var (
-	addr    = flag.String("a", ":5640", "Port to listen on")
-	debug   = flag.Bool("D", false, "trace 9P messages")
-	verbose = flag.Bool("v", false, "print extra info")
+	addr         = flag.String("a", ":5640", "Port to listen on")
+	debug        = flag.Bool("D", false, "trace 9P messages")
+	verbose      = flag.Bool("v", false, "print extra info")
+	max_messages = flag.Int("m", 20000, "maximum number of messages that can be held by a each queue")
 )
 
 type server struct {
@@ -113,7 +114,7 @@ func (srv *server) Serve9P(s *styx.Session) {
 				t.Ropen(mkdir(v), nil)
 			default:
 				if _, ok := internal_queues[t.Path()]; !ok {
-					internal_queues[t.Path()] = make(chan messageOrEOF, 2000)
+					internal_queues[t.Path()] = make(chan messageOrEOF, *max_messages)
 				}
 				t.Ropen(&fakefile{v: file, name: t.Path()}, nil)
 			}
@@ -134,7 +135,7 @@ func (srv *server) Serve9P(s *styx.Session) {
 					t.Rcreate(mkdir(dir), nil)
 				} else {
 					v[t.Name] = new(bytes.Buffer)
-					internal_queues[t.Path()] = make(chan messageOrEOF, 2000)
+					internal_queues[t.Path()] = make(chan messageOrEOF, *max_messages)
 					t.Rcreate(&fakefile{
 						v:    v[t.Name],
 						name: t.Path(),

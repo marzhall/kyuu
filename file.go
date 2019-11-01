@@ -43,9 +43,12 @@ func (f *fakefile) ReadAt(p []byte, off int64) (int, error) {
 func (f *fakefile) Write(p []byte) (int, error) {
 	tmp := make([]byte, len(p))
 	copy(tmp, p)
-	internal_queues[f.name] <- messageOrEOF{m: tmp, isEof: false}
-
-	return len(p), nil
+	select {
+	case internal_queues[f.name] <- messageOrEOF{m: tmp, isEof: false}:
+		return len(p), nil
+	default:
+		return 0, io.ErrShortWrite
+	}
 }
 
 func (f *fakefile) WriteAt(p []byte, off int64) (int, error) {
