@@ -4,10 +4,10 @@
 
 Kyuu creates message queues that expose themselves as files.
 
-Writes to a queue file place a message on it, and reads from
-the file return a message.
+Writint to a queue file places a message on it, and reading
+from the file returns a message.
 
-The queue server opens a socket, allowing it to be mounted
+The kyuu daemon opens a socket, allowing it to be mounted
 throughout the network. It can be mounted by any machine running
 a 9p fileystem driver, such as the built-in linux 9p driver, or,
 more easily (and without root priveleges), the 9pfuse FUSE filesystem
