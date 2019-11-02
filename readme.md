@@ -18,7 +18,7 @@ at an arbitrary number of mount points, and entirely using the normal
 filesystem operations of `READ` and `WRITE`, such as through using `cat` and
 `echo message > queue` in bash.
 
-When the kyuu daemon is spun up by the `kyuu` client, by defult, its
+When the kyuu daemon is spun up by the `kyuu` client, by default, its
 virtual filesystem will be mounted in the directory `$KYUUPATH`; if
 `$KYUUPATH` is unset, it will create a new directory `$HOME/kyuus` and
 mount there.
