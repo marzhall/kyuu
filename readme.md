@@ -134,7 +134,7 @@ The "kyuu" script depends upon it, but the kyuu daemon can be mounted
 without it by using the 9p driver in the Linux kernel - notably, this
 requires root prileges.
 
-The linux 9 driver command to mount the kyu directory would be:
+The linux 9 driver command to mount the kyuu directory would be:
 
     sudo mount -t 9p -o tcp,trans=tcp,port=5640 127.0.0.1 $KYUUPATH
 
