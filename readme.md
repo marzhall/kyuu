@@ -4,7 +4,7 @@
 
 Kyuu creates message queues that expose themselves as files.
 
-Writint to a queue file places a message on it, and reading
+Writing to a queue file places a message on it, and reading
 from the file returns a message.
 
 The kyuu daemon opens a socket, allowing it to be mounted
@@ -15,21 +15,21 @@ driver.
 
 Once mounted, a queue can be read from and be written to simulatenously
 at an arbitrary number of mount points, and entirely using the normal
-filesystem operations of READ and WRITE, such as through using `cat` and
+filesystem operations of `READ` and `WRITE`, such as through using `cat` and
 `echo message > queue` in bash.
 
 When the kyuu daemon is spun up by the `kyuu` client, by defult, its
-virtual filesystem will be mounted in the directory $KYUUPATH; if
-$KYUUPATH is unset, it will create a new directory $HOME/kyuus and
+virtual filesystem will be mounted in the directory `$KYUUPATH`; if
+`$KYUUPATH` is unset, it will create a new directory `$HOME/kyuus` and
 mount there.
 
 # Usage
 
-Building this package creates a server binary kyuuD, and a client tool kyuu.
+Building this package creates a server binary `kyuuD`, and a client tool `kyuu`.
 
 Creating, writing to, and reading from queues is handled by touching,
 reading, and writing files to wherever the kyuu daemon is mounted (usually,
-$KYUUPATH or $HOME/queues). Touching a file in $KYUUPATH, e.g.:
+`$KYUUPATH` or `$HOME/kyuus`). Touching a file in `$KYUUPATH`, e.g.:
 
         $: touch $KYUUPATH/newqueue
         $: ls $KYUUPATH
@@ -48,7 +48,7 @@ a message queue:
         $: cat newqueue
         > 
 
-Note that last bit - if the queue is empty, you just get an EOF!
+Note that last bit - if the queue is empty, you just get an `EOF`!
 
 Likewise, deleting a queue is as might be expected:
 
