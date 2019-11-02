@@ -9,8 +9,8 @@ from the file returns a message.
 
 The kyuu daemon opens a socket, allowing it to be mounted throughout
 the network. It can be mounted by any machine running a 9p fileystem
-driver, such as the built-in linux 9p driver, or, more easily (and
-without root priveleges), the 9pfuse FUSE filesystem driver.
+driver, such as the built-in 9p driver on Linux, or, more easily (and
+without root privileges), the 9pfuse FUSE filesystem driver.
 
 Once mounted, a queue can be read from and be written to simulatenously
 at an arbitrary number of mount points, and entirely using the normal
@@ -21,31 +21,6 @@ When the kyuu daemon is spun up by the `kyuu` client, by default, its
 virtual filesystem will be mounted in the directory `$KYUUPATH`; if
 `$KYUUPATH` is unset, it will create a new directory `$HOME/kyuus` and
 mount there.
-
-## Why
-
-All you reallly need to do with a queue is read from it and write to
-it, which conveniently is all you really need for a file.
-
-With this in mind, my frustration grew with modern Message Queues who
-left me to install a bunch of libraries that may or may not work
-with my programming language of choice, and/or use REST API calls and
-`curl` and its bunch of obtuse options, just to let me read from something
-and write to something. So, instead, I made a virtual filesystem for a queue -
-virtual files acting loosely like a REST API for the `kyuu` daemon,
-but very conveniently, just looking like files on the filesystem,
-which every programming language except for the esoterics can use.
-
-
-And, because the 9p virtual filesystem is a network filesystem by
-its nature, I don't lose out on any connectivity - I can mount
-the queues on many machines over a network and have them all chatting
-happily.
-
-And so now, instead of having to root around for libraries, I can just
-write programs that read and write to files. Like all of them do,
-and have done for decades.
-
 
 # Usage
 
@@ -172,3 +147,28 @@ With tests:
 Without tests:
 
     ./build.sh
+
+# Why
+
+All you reallly need do with a queue is read from it and write to
+it. Y'know, like files. Read and write. That's it.
+
+With this in mind, my frustration grew with modern message queues who
+left me to install libraries that only support some programming languages
+and/or use REST API calls and `curl` and its bunch of obtuse options,
+just to let me read from something and write to something.
+
+So, instead, I made a virtual filesystem for a queue -
+virtual files acting loosely like a REST API for the `kyuu` daemon,
+but very conveniently, just looking like files on the filesystem,
+which every programming language except for the esoterics can use.
+
+And, because the 9p virtual filesystem is a network filesystem by
+its nature, I don't lose out on any connectivity - I can mount
+the queues on many machines over a network and have them all chatting
+happily.
+
+And so now, instead of having to root around for libraries, I can just
+write programs that read and write to files. Like all of them do,
+and have done for decades.
+
