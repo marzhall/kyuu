@@ -4,9 +4,7 @@ package main
 
 import (
 	"bytes"
-	"encoding/json"
 	"flag"
-	"fmt"
 	"log"
 	"os"
 	"path"
@@ -39,19 +37,9 @@ func main() {
 	flag.Parse()
 	log.SetPrefix("")
 	log.SetFlags(0)
-	if flag.NArg() != 1 {
-		flag.Usage()
-		os.Exit(2)
-	}
 
 	var srv server
-	fsLayout := fmt.Sprintf(`{"%s": "s"}"`, flag.Arg(0))
-
-	layoutreader := strings.NewReader(fsLayout)
-	d := json.NewDecoder(layoutreader)
-	if err := d.Decode(&srv.file); err != nil {
-		log.Fatal(err)
-	}
+	srv.file = make(map[string]interface{})
 	var styxServer styx.Server
 	if *verbose {
 		styxServer.ErrorLog = log.New(os.Stderr, "", 0)
