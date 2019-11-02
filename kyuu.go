@@ -167,9 +167,14 @@ func (srv *server) Serve9P(s *styx.Session) {
 				if parent != nil {
 					if m, ok := parent.(map[string]interface{}); ok {
 						delete(m, path.Base(t.Path()))
+						_, ok := internal_queues[t.Path()]
+						if ok {
+							delete(internal_queues, t.Path())
+						}
+
 						t.Rremove(nil)
 					} else {
-						t.Rerror("cannot delete array element")
+						t.Rerror("Can't rm {0}", t.Path())
 					}
 				} else {
 					t.Rerror("permission denied")
