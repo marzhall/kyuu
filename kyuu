@@ -1,0 +1,45 @@
+#!/bin/bash
+
+if [[ $1 = "stop" ]]
+then
+    echo "shutting down."
+    fusermount -u $KYUUPATH
+    killall kyuuD
+    echo "shut down succesfully."
+    exit 0
+fi
+
+pidof kyuuD >/dev/null
+if [[ $? -ne 0 ]]
+then
+    ./kyuuD &
+    sleep 1
+
+    if [ -z $KYUUPATH ]
+    then
+        echo "Making a folder for the kyuus at $HOME/kyuus."
+        mkdir $HOME/.kyuus
+        export KYUUPATH=$HOME/.kyuus
+    fi
+
+    # Mount our kyuu dameon vfs
+    9pfuse 127.0.0.1:5640 $KYUUPATH
+fi
+
+# create and link the queue
+for file in $@
+do
+    if [ -f $KYUUPATH/$file ]
+    then
+        echo "$file already exists in $KYUUPATH"
+    else
+        touch $KYUUPATH/$file
+    fi
+
+    if [ -f $file ]
+    then
+        echo "$file already exists in local directory"
+    else
+        ln -s $KYUUPATH/$file .
+    fi
+done
