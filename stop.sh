@@ -1,1 +1,1 @@
-fusermount -u test; killall kyuu
+fusermount -u test; killall kyuuD
