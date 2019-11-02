@@ -163,10 +163,9 @@ virtual files acting loosely like a REST API for the `kyuu` daemon,
 but very conveniently, just looking like files on the filesystem,
 which every programming language except for the esoterics can use.
 
-And, because the 9p virtual filesystem is a network filesystem by
-its nature, I don't lose out on any connectivity - I can mount
-the queues on many machines over a network and have them all chatting
-happily.
+And, because the 9p virtual filesystem is a network filesystem,
+I don't lose out on any connectivity - I can mount the queues on many
+machines over a network and have them all chatting happily.
 
 And so now, instead of having to root around for libraries, I can just
 write programs that read and write to files. Like all of them do,
