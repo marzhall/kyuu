@@ -12,7 +12,7 @@ fi
 pidof kyuuD >/dev/null
 if [[ $? -ne 0 ]]
 then
-    ./kyuuD &
+    kyuuD &
     sleep 1
 
     if [ -z $KYUUPATH ]
