@@ -11,11 +11,11 @@ _flush=""
 while getopts "h?srvf" opt; do
     case "$opt" in
     h|\?)
-        echo " Specify -r to delete kyuus."
-        echo " Specify -s to shut down."
+        echo " Specify -f followed by followed by a list of kyuu names to flush named kyuus of messages."
         echo " Specify -h to show this help."
+        echo " Specify -r followed by a list of kyuu names to delete kyuus and their local symlinks."
+        echo " Specify -s to shut down."
         echo " Specify -v for verbose output."
-        echo " Specify -f followed by queue names to flush queues."
         exit 0
         ;;
     s)  _stop=1
