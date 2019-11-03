@@ -10,7 +10,7 @@ _verbose=""
 while getopts "h?srv:" opt; do
     case "$opt" in
     h|\?)
-        echo " Specify -r to delete linked kyuus;\n -s to shut down."
+        echo " Specify -r to delete kyuus."
         echo " Specify -s to shut down."
         echo " Specify -h to show this help."
         echo " Specify -v for verbose output."
