@@ -1,11 +1,55 @@
 #!/bin/bash
 
-if [[ $1 = "stop" ]]
+OPTIND=1         # Reset in case getopts has been used previously in the shell.
+
+# Initialize our own variables:
+_stop=""
+_rm=""
+_verbose=""
+
+while getopts "h?srv:" opt; do
+    case "$opt" in
+    h|\?)
+        echo " Specify -r to delete linked kyuus;\n -s to shut down."
+        echo " Specify -s to shut down."
+        echo " Specify -h to show this help."
+        echo " Specify -v for verbose output."
+        exit 0
+        ;;
+    s)  _stop=1
+        ;;
+    r)  _rm=1
+        ;;
+    v)  _verbose=1
+        ;;
+    esac
+done
+
+[ "${1:-}" = "--" ] && shift
+
+shift $((OPTIND-1))
+
+if [[ $_stop ]]
 then
     echo "shutting down."
     fusermount -u $KYUUPATH
     killall kyuuD
     echo "shut down succesfully."
+    exit 0
+fi
+
+if [[ $_rm ]]
+then
+    for file in $@
+    do
+        if [[ $_verbose ]]
+        then
+            echo "rm'ing $file"
+        fi
+
+        rm $file
+        rm $KYUUPATH/$file
+    done
     exit 0
 fi
 
