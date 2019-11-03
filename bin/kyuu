@@ -6,14 +6,16 @@ OPTIND=1         # Reset in case getopts has been used previously in the shell.
 _stop=""
 _rm=""
 _verbose=""
+_flush=""
 
-while getopts "h?srv:" opt; do
+while getopts "h?srvf" opt; do
     case "$opt" in
     h|\?)
         echo " Specify -r to delete kyuus."
         echo " Specify -s to shut down."
         echo " Specify -h to show this help."
         echo " Specify -v for verbose output."
+        echo " Specify -f followed by queue names to flush queues."
         exit 0
         ;;
     s)  _stop=1
@@ -22,12 +24,36 @@ while getopts "h?srv:" opt; do
         ;;
     v)  _verbose=1
         ;;
+    f)  _flush=1
+        ;;
     esac
 done
 
 [ "${1:-}" = "--" ] && shift
 
 shift $((OPTIND-1))
+
+if [[ $_flush ]]
+then
+    for queue in $@
+    do
+        if [[ $_verbose ]]
+        then
+            echo "Flushing queue $queue"
+        fi
+
+        while true
+        do
+            val=`cat $KYUUPATH/$queue`
+            if [[ ! $val ]]
+            then
+                break
+            fi
+        done
+    done
+
+    exit 0
+fi
 
 if [[ $_stop ]]
 then
