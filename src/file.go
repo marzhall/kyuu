@@ -27,16 +27,17 @@ type fakefile struct {
 
 func (f *fakefile) ReadAt(p []byte, off int64) (int, error) {
 	if f.sendEof {
-		return 0, nil
+		f.sendEof = false
+		return 0, io.EOF
 	}
 
 	select {
 	case temp := <-internal_queues[f.name]:
 		n := copy(p, temp.m)
 		f.sendEof = true
-		return n, nil
+		return n, io.EOF
 	default:
-		return 0, nil
+		return 0, io.EOF
 	}
 }
 
