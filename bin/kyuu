@@ -7,12 +7,16 @@ _stop=""
 _rm=""
 _verbose=""
 _flush=""
+_debug=""
+_symlink=""
 
-while getopts "h?srvf" opt; do
+while getopts "h?srvfdl" opt; do
     case "$opt" in
     h|\?)
+        echo " Specify -d to turn on debug mode."
         echo " Specify -f followed by followed by a list of kyuu names to flush named kyuus of messages."
         echo " Specify -h to show this help."
+        echo " Specify -l to create queues and then symlink them to the current directory."
         echo " Specify -r followed by a list of kyuu names to delete kyuus and their local symlinks."
         echo " Specify -s to shut down."
         echo " Specify -v for verbose output."
@@ -25,6 +29,10 @@ while getopts "h?srvf" opt; do
     v)  _verbose=1
         ;;
     f)  _flush=1
+        ;;
+    d)  _debug=1
+        ;;
+    l)  _symlink=1
         ;;
     esac
 done
@@ -82,7 +90,13 @@ fi
 pidof kyuuD >/dev/null
 if [[ $? -ne 0 ]]
 then
-    kyuuD &
+    if [[ $_debug ]]
+    then
+        kyuuD -v &
+    else
+        kyuuD &
+    fi
+
     sleep 1
 
     if [ -z $KYUUPATH ]
@@ -93,7 +107,12 @@ then
     fi
 
     # Mount our kyuu dameon vfs
-    9pfuse 127.0.0.1:5640 $KYUUPATH
+    if [[ $_debug ]]
+    then
+        9pfuse -D 127.0.0.1:5640 $KYUUPATH
+    else
+        9pfuse 127.0.0.1:5640 $KYUUPATH
+    fi
 fi
 
 # create and link the queue
@@ -106,10 +125,13 @@ do
         touch $KYUUPATH/$file
     fi
 
-    if [ -f $file ]
+    if [[ $_symlink ]]
     then
-        echo "$file already exists in local directory"
-    else
-        ln -s $KYUUPATH/$file .
+        if [ -f $file ]
+        then
+            echo "$file already exists in local directory"
+        else
+            ln -s $KYUUPATH/$file .
+        fi
     fi
 done
