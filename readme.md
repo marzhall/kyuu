@@ -117,6 +117,14 @@ directory as the kyuu client would normally do.
 The `integration_tests/basic_read_write_tests.sh` bash script is also
 a good example.
 
+## Orchestration example
+
+A more fully-fleshed orchestration example can be found in this
+[repository](https://github.com/marzhall/kyuu_orchestration_example).
+
+It uses kyuu to orchestrate a worker subprocesses pipeline entirely
+through a bash script.
+
 # Dependencies
 
 Kyuu is built and tested with go `1.13.3`.
