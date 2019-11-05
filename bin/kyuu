@@ -14,7 +14,7 @@ while getopts "h?srvfdl" opt; do
     case "$opt" in
     h|\?)
         echo " Specify -d to turn on debug mode."
-        echo " Specify -f followed by followed by a list of kyuu names to flush named kyuus of messages."
+        echo " Specify -f followed by followed by a list of kyuu names to flush named kyuus of messages. Specifying -v will list all of the messages flushed."
         echo " Specify -h to show this help."
         echo " Specify -l to create queues and then symlink them to the current directory."
         echo " Specify -r followed by a list of kyuu names to delete kyuus and their local symlinks."
@@ -45,17 +45,17 @@ if [[ $_flush ]]
 then
     for queue in $@
     do
-        if [[ $_verbose ]]
-        then
-            echo "Flushing queue $queue"
-        fi
-
         while true
         do
             val=`cat $KYUUPATH/$queue`
             if [[ ! $val ]]
             then
                 break
+            fi
+
+            if [[ $_verbose ]]
+            then
+                echo $val
             fi
         done
     done
