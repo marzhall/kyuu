@@ -40,6 +40,7 @@ func main() {
 
 	var srv server
 	srv.file = make(map[string]interface{})
+	srv.file[".kyuu_ctl"] = "server_control"
 	var styxServer styx.Server
 	if *verbose {
 		styxServer.ErrorLog = log.New(os.Stderr, "", 0)

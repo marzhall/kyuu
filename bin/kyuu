@@ -133,8 +133,6 @@ then
     else
         9pfuse $_server_address $KYUUPATH
     fi
-
-    touch $KYUUPATH/.kyuu_ctl
 fi
 
 # create and link the queue
