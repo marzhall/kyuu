@@ -3,6 +3,7 @@
 OPTIND=1         # Reset in case getopts has been used previously in the shell.
 
 # Initialize our own variables:
+_server_address=""
 _stop=""
 _rm=""
 _verbose=""
@@ -10,9 +11,10 @@ _flush=""
 _debug=""
 _symlink=""
 
-while getopts "h?srvfdl" opt; do
+while getopts "a:h?srvfdl" opt; do
     case "$opt" in
     h|\?)
+        echo " Specify -a followed by a url/port to connect to that server."
         echo " Specify -d to turn on debug mode."
         echo " Specify -f followed by followed by a list of kyuu names to flush named kyuus of messages. Specifying -v will list all of the messages flushed."
         echo " Specify -h to show this help."
@@ -21,6 +23,8 @@ while getopts "h?srvfdl" opt; do
         echo " Specify -s to shut down."
         echo " Specify -v for verbose output."
         exit 0
+        ;;
+    a)  _server_address=$OPTARG
         ;;
     s)  _stop=1
         ;;
@@ -87,14 +91,30 @@ then
     exit 0
 fi
 
-pidof kyuuD >/dev/null
-if [[ $? -ne 0 ]]
+if [ ! -f "$KYUUPATH/.kyuu_ctl" ]
 then
-    if [[ $_debug ]]
+    # If there's no mounted server, and if we aren't trying
+    # to connect to a remote server, then spin a local one up.
+    if [[ ! $_server_address ]]
     then
-        kyuuD -v &
-    else
-        kyuuD &
+        if [[ $_verbose ]]
+        then
+            echo "No remote server specified, and no .kyuu_ctl file found. Spinning up a local kyuuD."
+        fi
+
+        if [[ $_debug ]]
+        then
+            kyuuD -v &
+        else
+            kyuuD &
+        fi
+    fi
+
+    # if no remote server has been specified, set the
+    # address as the default
+    if [[ ! $_server_address ]]
+    then
+        _server_address=127.0.0.1:5640
     fi
 
     sleep 1
@@ -109,10 +129,12 @@ then
     # Mount our kyuu dameon vfs
     if [[ $_debug ]]
     then
-        9pfuse -D 127.0.0.1:5640 $KYUUPATH
+        9pfuse -D $_server_address $KYUUPATH
     else
-        9pfuse 127.0.0.1:5640 $KYUUPATH
+        9pfuse $_server_address $KYUUPATH
     fi
+
+    touch $KYUUPATH/.kyuu_ctl
 fi
 
 # create and link the queue
