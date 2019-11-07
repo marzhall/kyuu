@@ -1,0 +1,9 @@
+#!/bin/bash
+
+msg=`cat $1 || true`
+if [[ -z $msg ]]
+then
+    sleep 2
+else
+    echo "$msg" | ${@:3} > $2
+fi
