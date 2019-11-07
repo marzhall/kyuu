@@ -64,7 +64,7 @@ ease-of-use, but it does nothing you can't do with a `bash` prompt.
 
 Okay, you've got a need for a new queue in your current directory. You run:
 
-        $: kyuu testqueue
+        $: kyuu -l testqueue
         $: ls
         > testqueue
 
@@ -162,9 +162,9 @@ All you reallly need do with a queue is read from it and write to
 it. Y'know, like files. Read and write. That's it.
 
 With this in mind, my frustration grew with modern message queues who
-left me to install libraries that only support some programming languages
-and/or use REST API calls and `curl` and its bunch of obtuse options,
-just to let me read from something and write to something.
+required me to install libraries that only support some programming
+languages and/or use REST API calls and `curl` and its bunch of obtuse
+options, just to let me read from something and write to something.
 
 So, instead, I made a virtual filesystem for a queue -
 virtual files acting loosely like a REST API for the `kyuu` daemon,
