@@ -4,6 +4,7 @@ OPTIND=1         # Reset in case getopts has been used previously in the shell.
 
 # Initialize our own variables:
 _server_address=""
+_kyuuD_creation_address=""
 _stop=""
 _rm=""
 _verbose=""
@@ -11,10 +12,11 @@ _flush=""
 _debug=""
 _symlink=""
 
-while getopts "a:h?srvfdl" opt; do
+while getopts "a:c:h?srvfdl" opt; do
     case "$opt" in
     h|\?)
-        echo " Specify -a followed by a url/port to connect to that server."
+        echo " If the kyuu daemon is not mounted at \$KYUUPATH, specify -a followed by a url/port to create a new server with that url address, and mount it at \$KYUUPATH. If it a kyuuD is mounted at \$KYUUPATH, this argument does nothing."
+        echo " Specify -c followed by a url/port to connect to that server."
         echo " Specify -d to turn on debug mode."
         echo " Specify -f followed by followed by a list of kyuu names to flush named kyuus of messages. Specifying -v will list all of the messages flushed."
         echo " Specify -h to show this help."
@@ -24,7 +26,9 @@ while getopts "a:h?srvfdl" opt; do
         echo " Specify -v for verbose output."
         exit 0
         ;;
-    a)  _server_address=$OPTARG
+    a)  _kyuuD_creation_address=$OPTARG
+        ;;
+    c)  _server_address=$OPTARG
         ;;
     s)  _stop=1
         ;;
@@ -93,6 +97,12 @@ fi
 
 if [ ! -f "$KYUUPATH/.kyuu_ctl" ]
 then
+    kyuuD_address_arg=""
+    if [[ $_kyuuD_creation_address ]]
+    then
+        kyuuD_address_arg="-a $_kyuuD_creation_address"
+    fi
+
     # If there's no mounted server, and if we aren't trying
     # to connect to a remote server, then spin a local one up.
     if [[ ! $_server_address ]]
@@ -104,9 +114,9 @@ then
 
         if [[ $_debug ]]
         then
-            kyuuD -v &
+            kyuuD -v -d $kyuuD_address_arg &
         else
-            kyuuD &
+            kyuuD $kyuuD_address_arg &
         fi
     fi
 
@@ -114,7 +124,13 @@ then
     # address as the default
     if [[ ! $_server_address ]]
     then
-        _server_address=127.0.0.1:5640
+        if [[ -z $_kyuuD_creation_address ]]
+        then
+            _server_address=127.0.0.1:5640
+        else
+            # if we're handed an address to bind to, and it's 0.0.0.0 - all addresses - make sure to just mount from localhost
+            _server_address=`echo $_kyuuD_creation_address | sed 's/0.0.0.0/127.0.0.1/' `
+        fi
     fi
 
     sleep 1
