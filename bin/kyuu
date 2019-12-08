@@ -138,8 +138,8 @@ then
     if [ -z $KYUUPATH ]
     then
         echo "Making a folder for the kyuus at $HOME/kyuus."
-        mkdir $HOME/.kyuus
-        export KYUUPATH=$HOME/.kyuus
+        mkdir $HOME/kyuus
+        export KYUUPATH=$HOME/kyuus
     fi
 
     # Mount our kyuu dameon vfs
