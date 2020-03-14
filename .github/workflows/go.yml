@@ -31,4 +31,4 @@ jobs:
         fi
 
     - name: Build
-      run: sh build.sh tests
+      run: bash build.sh tests
