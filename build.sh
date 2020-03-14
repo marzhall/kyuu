@@ -7,7 +7,7 @@ then
     exit 0
 fi
 
-if [ $1 == "tests" ]
+if [ $1 = "tests" ]
 then
     echo "Testing."
     cd integration_tests
