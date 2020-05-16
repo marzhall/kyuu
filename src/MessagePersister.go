@@ -59,7 +59,8 @@ func (m *MessagePersister) Shutdown() {
 }
 
 func (m *MessagePersister) MessageQueued(msg []byte) error {
-	marshall, err := json.Marshal(msg)
+	strmsg := string(msg)
+	marshall, err := json.Marshal(strmsg)
 	if err != nil {
 		log.Println("error marshalling ", msg)
 		return err
@@ -81,7 +82,8 @@ func (m *MessagePersister) MessageQueued(msg []byte) error {
 }
 
 func (m *MessagePersister) MessageDelivered(msg []byte) error {
-	marshall, err := json.Marshal(msg)
+	strmsg := string(msg)
+	marshall, err := json.Marshal(strmsg)
 	if err != nil {
 		log.Println("error marshalling ", msg)
 		return err
