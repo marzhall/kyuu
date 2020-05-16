@@ -1,4 +1,9 @@
 echo "Setting up test environment."
+if [ -d "kyuu_storage" ]
+then
+    rm -rf kyuu_storage
+fi
+
 ../bin/kyuuD &
 sleep 1
 

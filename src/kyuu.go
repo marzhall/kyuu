@@ -38,6 +38,8 @@ func main() {
 	log.SetPrefix("")
 	log.SetFlags(0)
 
+	Persister = MakeMessagePersister("")
+
 	var srv server
 	srv.file = make(map[string]interface{})
 	srv.file[".kyuu_ctl"] = "server_control"
@@ -163,7 +165,7 @@ func (srv *server) Serve9P(s *styx.Session) {
 
 						t.Rremove(nil)
 					} else {
-						t.Rerror("Can't rm {0}", t.Path())
+						t.Rerror("Can't rm %s", t.Path())
 					}
 				} else {
 					t.Rerror("permission denied")

@@ -12,5 +12,6 @@ then
     echo "Testing."
     cd integration_tests
     sh basic_readwrite_test.sh
+    sh persistance_test.sh
     echo "Testing complete."
 fi

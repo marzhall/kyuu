@@ -34,6 +34,7 @@ func (f *fakefile) ReadAt(p []byte, off int64) (int, error) {
 	select {
 	case temp := <-internal_queues[f.name]:
 		n := copy(p, temp.m)
+		Persister.MessageDelivered(temp.m)
 		f.sendEof = true
 		return n, io.EOF
 	default:
@@ -46,6 +47,7 @@ func (f *fakefile) Write(p []byte) (int, error) {
 	copy(tmp, p)
 	select {
 	case internal_queues[f.name] <- messageOrEOF{m: tmp, isEof: false}:
+		Persister.MessageQueued(tmp)
 		return len(p), nil
 	default:
 		return 0, io.ErrShortWrite

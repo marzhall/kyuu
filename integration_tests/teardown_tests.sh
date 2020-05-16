@@ -6,3 +6,4 @@ killall kyuuD
 sleep 1
 fusermount -u test_kyuus
 rm -rf test_kyuus
+rm -rf kyuu_storage
