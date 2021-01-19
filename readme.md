@@ -182,7 +182,8 @@ and have done for decades.
 # Honorable mentions:
 
 [Kvik](https://github.com/okvik) has created another fs-exposed message queue here: https://git.sr.ht/~kvik/mq
-There's also additional documentation, features, and utilites, as well as a convenient `pin` utility for using
+
+There's additional documentation, features, and utilites, as well as a convenient `pin` utility for using
 queues to record and persist shell sessions. Check it out!
 
 *kyuu's name is cuter tho*
