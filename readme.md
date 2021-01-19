@@ -179,3 +179,9 @@ And so now, instead of having to root around for libraries, I can just
 write programs that read and write to files. Like all of them do,
 and have done for decades.
 
+# Honorable mentions:
+
+The 9fan kvik has created another fs-exposed message queue here: https://git.sr.ht/~kvik/mq
+There's also additional documentation, features, and utilites. Check it out!
+
+*kyuu's name still better tho*
