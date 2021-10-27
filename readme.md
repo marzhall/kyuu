@@ -181,9 +181,7 @@ and have done for decades.
 
 # Honorable mentions:
 
-[Kvik](https://github.com/okvik) has created another fs-exposed message queue here: https://git.sr.ht/~kvik/mq
+[Kvik](https://github.com/okvik) has created a more fleshed-out, battle-hardened message queue with an FS api here: https://git.sr.ht/~kvik/mq
 
 There's additional documentation, features, and utilites, as well as a convenient `pin` utility for using
-queues to record and persist shell sessions. Check it out!
-
-*kyuu's name is cuter tho*
+queues to record and persist shell sessions. I'ts been used in anger - check it out!
